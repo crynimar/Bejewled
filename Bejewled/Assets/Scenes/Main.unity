@@ -213,6 +213,7 @@ MonoBehaviour:
   width: 8
   height: 8
   pieceSize: 64
+  eraseSpeed: 0.5
 --- !u!1 &519420028
 GameObject:
   m_ObjectHideFlags: 0
@@ -326,6 +327,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   GridPanel: {fileID: 29130279}
+  lastCellClicked: {fileID: 0}
 --- !u!4 &600375861
 Transform:
   m_ObjectHideFlags: 0
