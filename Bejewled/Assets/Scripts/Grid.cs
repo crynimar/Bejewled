@@ -24,7 +24,8 @@ public class Grid : MonoBehaviour
     public void InitGrid()
     {
         GridSize = width * height;
-        PieceInGrid = new Piece[GridSize, GridSize];
+        CellinGrid = new Cell[width, height];
+        PieceInGrid = new Piece[width, height];
 
         for (int i = 0; i < width; i++)
         {
@@ -33,29 +34,34 @@ public class Grid : MonoBehaviour
                 //Create cell
                 Cell cell = Instantiate(CellPrefab, transform);
                 cell.name= string.Format("Cell-{0},{1}", i, j);
-
-                //get piece from pool
-                Piece piece = PiecePooling.Instance.GetPiece();
-
-                if (piece != null)
-                {
-                    PieceInGrid[i, j] = piece;
-                    piece.Init();
-                    piece.transform.SetParent(cell.transform);
-
-                    cell.Init(i, j, piece); //set grid position and piece to cell                    
-                }
+                CellinGrid[i, j] = cell;
+                cell.Init(i, j);  
             }
         }
 
-        PositionPieces();
+        PositionCells();
     }
 
-    private void PositionPieces()
+    private void PositionCells()
     {
-        foreach(Piece p in PieceInGrid)
+        int index= 0;
+        int row = 0;
+        Debug.Log(CellinGrid.Length);
+        foreach(Cell c in CellinGrid)
         {
+            c.rectTransform.anchoredPosition = new Vector3(PieceSize * index, row, 0);
+            index++;
 
+            if (index % width == 0)
+            {
+                row -= PieceSize;
+                index = 0;
+            }
         }
+    }
+
+    private void CheckCombinations()
+    {
+
     }
 }
