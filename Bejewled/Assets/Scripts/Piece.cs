@@ -11,9 +11,6 @@ public enum PieceType
     GingerBreadMan,
     GumDrop,
     GummyBeard,
-    HeartLollipop,
-    Macaron,
-    Popsicle
 }
 
 public class Piece : MonoBehaviour
@@ -45,7 +42,7 @@ public class Piece : MonoBehaviour
         transform.SetParent(c.transform);
         CurrentCell = c;
         RandomizePiece();
-    }   
+    }
 
     public void Animate()
     {
@@ -56,7 +53,7 @@ public class Piece : MonoBehaviour
     {
         StartCoroutine(GoToNewCellAnimation(needCallAction));
     }
-    
+
     public void GoDownAnimation()
     {
         StartCoroutine(GoToNewCellAnimation(false));
@@ -74,5 +71,4 @@ public class Piece : MonoBehaviour
         if (callAction)
             CurrentCell.PieceFinishSwipeAnimation();
     }
- 
 }

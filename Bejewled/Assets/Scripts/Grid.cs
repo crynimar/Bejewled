@@ -13,7 +13,6 @@ public class Grid : MonoBehaviour
 
     private Cell[,] CellinGrid;
 
-
     public void InitGrid()
     {
         CellinGrid = new Cell[width, height];
@@ -33,14 +32,7 @@ public class Grid : MonoBehaviour
 
         PositionCells();
         PopulateAdjacentCells();
-    }
-
-    void Update()
-    {
-        if (Input.GetKeyDown("space"))
-        {
-            CheckGridMatchs();
-        }
+        CheckGridMatchs();        
     }
     private void PositionCells()
     {
@@ -49,7 +41,7 @@ public class Grid : MonoBehaviour
 
         foreach(Cell c in CellinGrid)
         {
-            c.RectTransform.anchoredPosition = new Vector3(pieceSize * index, row, 0);
+            c.RectTransfom.anchoredPosition = new Vector3(pieceSize * index, row, 0);
             index++;
 
             if (index % width == 0)
@@ -105,6 +97,7 @@ public class Grid : MonoBehaviour
 
     public void CheckGridMatchs()
     {
+        GameManager.Instance.SetCanPlay(false);
         List<Cell> matchList = new List<Cell>();
         foreach (Cell c in CellinGrid)
         {
@@ -115,14 +108,15 @@ public class Grid : MonoBehaviour
                 break;
             }                
         }       
+        GameManager.Instance.SetCanPlay(true);
     }
 
     IEnumerator CallResolveMatch(List<Cell> matchList)
     {
-        GameManager.Instance.CanPlay = false;
+        GameManager.Instance.SetCanPlay(false);
         yield return new WaitForSeconds(eraseSpeed);
         GameManager.Instance.ResolveMatch(matchList);
-        GameManager.Instance.CanPlay = true;
+        GameManager.Instance.SetCanPlay(true);
     }
 
    

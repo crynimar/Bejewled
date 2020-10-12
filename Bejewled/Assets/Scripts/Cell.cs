@@ -13,9 +13,10 @@ public class Cell : MonoBehaviour,  IPointerClickHandler, IPointerUpHandler,IBeg
     [SerializeField] private Vector2 currentPosInBoard;
     [SerializeField] private Piece currentPiece;
     [SerializeField] private Grid currentGrid;
+
     public Piece CurrentPiece { get => currentPiece; set => currentPiece = value; }
     public Grid CurrentGrid { get => currentGrid; set => currentGrid = value; }
-    public RectTransform RectTransform { get => rectTransform; set => rectTransform = value; }
+    public RectTransform RectTransfom { get => rectTransform; set => rectTransform = value; }
 
     private Cell lastSwipedCell;   
     //private bool alreadySwipedPieces = false;
@@ -54,7 +55,6 @@ public class Cell : MonoBehaviour,  IPointerClickHandler, IPointerUpHandler,IBeg
             UpCell.SendPieceDown();
         else
             currentGrid.GenerateNewPiece(this);
-
     }
 
     public void SendPieceDown()
@@ -149,8 +149,7 @@ public class Cell : MonoBehaviour,  IPointerClickHandler, IPointerUpHandler,IBeg
         GameManager.Instance.ResolveMatch(MatchedList); //Resolve Match       
         lastSwipedCell = null;
     }
-
-
+  
     #region Check Combinations
     public List<Cell> CheckCombinations()
     {

@@ -95,8 +95,6 @@ MonoBehaviour:
   - {fileID: 21300000, guid: 86fe3cabe72b14bf1b9092f7821222ed, type: 3}
   - {fileID: 21300000, guid: c82c3e28f462747dba18552f9c31b8eb, type: 3}
   - {fileID: 21300000, guid: 8f9335cddb67b400cbb29a1d8dc11a04, type: 3}
-  - {fileID: 21300000, guid: 28c82859ed06f433fa96b20378c316d5, type: 3}
-  - {fileID: 21300000, guid: 0880325b431534468997449729cade2e, type: 3}
-  - {fileID: 21300000, guid: 6c6e19955f5eb434facf992f895ebb0a, type: 3}
+  currentCell: {fileID: 0}
   imageComponent: {fileID: 6388652894048750615}
   animationSpeed: 150

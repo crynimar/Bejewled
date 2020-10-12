@@ -328,6 +328,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   GridPanel: {fileID: 29130279}
   lastCellClicked: {fileID: 0}
+  pieceAnimationDethTime: 0.5
+  canPlay: 0
 --- !u!4 &600375861
 Transform:
   m_ObjectHideFlags: 0

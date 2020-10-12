@@ -10,10 +10,8 @@ public class GameManager : MonoBehaviour
     [SerializeField] private Grid GridPanel;
 
     [SerializeField] private Cell lastCellClicked;
-
-    private bool canPlay = false;
-
-    public bool CanPlay { get => canPlay; set => canPlay = value; }
+    [SerializeField] private float pieceAnimationDethTime;
+    [SerializeField] private bool canPlay = false;
 
     void Awake()
     {
@@ -30,12 +28,12 @@ public class GameManager : MonoBehaviour
     private void Init()
     {
         GridPanel.InitGrid();
-        CanPlay = true;
+        SetCanPlay(true);
     }
 
     public void CellWasClicked(Cell c)
     {
-        if (CanPlay)
+        if (canPlay)
         {
             if (lastCellClicked == null)
                 lastCellClicked = c;
@@ -52,7 +50,8 @@ public class GameManager : MonoBehaviour
                 lastCellClicked = null;
             }
         }
-        lastCellClicked = null;
+        else
+            lastCellClicked = null;
     }
 
     public void ResolveMatch(List<Cell> matchedCells)
@@ -62,8 +61,12 @@ public class GameManager : MonoBehaviour
             c.CurrentPiece.CurrentCell = null;
             PiecePooling.Instance.PoolOnePiece(c.CurrentPiece);
             c.CurrentPiece = null;
-            //c.InitMatch();
         }
+
+       
         GridPanel.FillGrid();
     }
+
+    public void SetCanPlay(bool value) => canPlay = value;
+
 }
