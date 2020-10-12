@@ -7,16 +7,17 @@ public class Piece : MonoBehaviour
 {
     [SerializeField] private Sprite[] PossibleSprites;
     [SerializeField] private Image ImageComponent;
+    [SerializeField] private Vector2 currentPosInBoard;
 
     private Sprite CurrentSprite;
 
-    private void Start()
-    {
-        ChooseSprite();
-    }
-    private void ChooseSprite()
+    public void RandomizePiece()
     {
         CurrentSprite = PossibleSprites[Random.Range(0, PossibleSprites.Length)];
         ImageComponent.sprite = CurrentSprite;
+    }
+    public void Init()
+    {
+        RandomizePiece();
     }
 }
