@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
@@ -6,16 +7,17 @@ using UnityEngine.EventSystems;
 
 public class Cell : MonoBehaviour,  IPointerClickHandler, IPointerUpHandler,IBeginDragHandler, IDragHandler, IEndDragHandler
 {
-    public RectTransform rectTransform;
     public Cell LeftCell, RightCell, UpCell, DownCell;
 
+    [SerializeField] private RectTransform rectTransform;
     [SerializeField] private Vector2 currentPosInBoard;
     [SerializeField] private Piece currentPiece;
+    [SerializeField] private Grid currentGrid;
     public Piece CurrentPiece { get => currentPiece; set => currentPiece = value; }
+    public Grid CurrentGrid { get => currentGrid; set => currentGrid = value; }
+    public RectTransform RectTransform { get => rectTransform; set => rectTransform = value; }
 
-    private Cell lastSwipedCell;
-
-   
+    private Cell lastSwipedCell;   
     //private bool alreadySwipedPieces = false;
 
     public void Init(int posX, int posY)
@@ -38,12 +40,77 @@ public class Cell : MonoBehaviour,  IPointerClickHandler, IPointerUpHandler,IBeg
 
         if (piece != null)
         {
-            piece.transform.SetParent(transform);
             piece.Init(this);
+            piece.RectTransform.anchoredPosition = Vector3.zero;
+            piece.SubscribeAction();
             CurrentPiece = piece;
         }
         else
             Debug.Log("Failed in receive Piece");
+    }
+
+    public void InitMatch()
+    {
+        UpdadePieces();
+    }
+
+    private void UpdadePieces()
+    {
+        // if(UpCell)
+        // {   
+        //     currentPiece = UpCell.CurrentPiece;
+        //     currentPiece.CurrentCell = this;
+        //     currentPiece.transform.SetParent(transform);
+        //     currentPiece.GoDownAnimation();
+        //     UpCell.UpdadePieces();
+        //     //Apaga peça
+        //     //manda peça pro pool
+        //     //puxa peça de cima
+        //     //faz a peça de cima fazer o mesmo
+        // }
+        // else
+        // {
+        //     //cria nova peça
+        // }
+
+        if (UpCell)
+        {
+            UpCell.SendPieceDown();
+        }
+       // else
+       //     grid.GenerateNewPiece(this);
+    }   
+
+    public void SendPieceDown()
+    {   
+        if (CurrentPiece == null)
+        {     
+            if(UpCell)
+            {
+                UpCell.SendPieceDown();
+            }
+        }
+
+        if (CurrentPiece != null)
+        {
+            if (DownCell)
+            {
+                CurrentPiece.UnsubscribeAction();
+                DownCell.CurrentPiece = CurrentPiece;
+                CurrentPiece.CurrentCell = DownCell;
+                CurrentPiece.transform.SetParent(DownCell.transform);
+
+                CurrentPiece.GoDownAnimation();
+                currentPiece = null;
+                DownCell.CurrentPiece.SubscribeAction();
+
+                if (UpCell)
+                    UpCell.SendPieceDown();
+                else
+                    currentGrid.GenerateNewPiece(this);
+            }
+        }
+
     }
 
     public void CanSwipePieces(Cell cellToChange)
@@ -53,11 +120,11 @@ public class Cell : MonoBehaviour,  IPointerClickHandler, IPointerUpHandler,IBeg
         else if(cellToChange == UpCell) SwipePieces(UpCell);
         else if(cellToChange == DownCell) SwipePieces(DownCell);        
     }
-    private void SwipePieces(Cell c, bool returningAnimation = false)
+    private void SwipePieces(Cell c, bool needCallAction = true) // Action will tell if need to return animation
     {
         lastSwipedCell = c;
 
-        if (returningAnimation)
+        if (!needCallAction)
             lastSwipedCell = null;
 
         Piece tempPiece = c.CurrentPiece;
@@ -68,42 +135,52 @@ public class Cell : MonoBehaviour,  IPointerClickHandler, IPointerUpHandler,IBeg
         c.CurrentPiece = CurrentPiece;
         CurrentPiece = tempPiece;
 
-        CurrentPiece.SwipeAnimation(returningAnimation);
-        c.CurrentPiece.SwipeAnimation(returningAnimation);
+        CurrentPiece.SwipeAnimation(needCallAction);
+        c.CurrentPiece.SwipeAnimation(needCallAction);
     }
 
     public void PieceFinishSwipeAnimation()
     {
-        if(lastSwipedCell != null)
+        if (lastSwipedCell != null)        
+            CheckCombinationAfterSwipe();  
+    }
+
+    private void CheckCombinationAfterSwipe()
+    {
+        List<Cell> MatchedList = new List<Cell>();
+
+        MatchedList = CheckCombinations();
+        if (MatchedList.Count <= 0)
         {
-            if (!CheckCombinations())
-            {      
-                if (!lastSwipedCell.CheckCombinations())
-                {                    
-                    SwipePieces(lastSwipedCell, true);                   
-                    return;
-                }
-      
-                else
-                {
-                    //TODO: QUEBRAR
-                    lastSwipedCell = null;
-                }
-            }
+            MatchedList = lastSwipedCell.CheckCombinations();
+
+            if(MatchedList.Count<=0)            
+                SwipePieces(lastSwipedCell, false); //Swipe back  
             else
             {
-                //TODO: QUEBRAR 
+                GameManager.Instance.ResolveMatch(MatchedList); //Resolve Match
+
+                //Call pieces to unsbcribe from their method and subscribe to the new parent method
+                lastSwipedCell.CurrentPiece.UnsubscribeAction();
+                CurrentPiece.UnsubscribeAction();
+                lastSwipedCell.CurrentPiece.SubscribeAction();
+                CurrentPiece.SubscribeAction();
                 lastSwipedCell = null;
             }
         }
+        else
+        {
+            Debug.Log("COmination");
+            GameManager.Instance.ResolveMatch(MatchedList); //Resolve Match
+            lastSwipedCell = null;
+        }
     }
 
+
     #region Check Combinations
-    public bool CheckCombinations()
+    public List<Cell> CheckCombinations()
     {
-        int matchs = 0;
-        List<Cell> MatchedList = new List<Cell>();
-        
+        List<Cell> MatchedList = new List<Cell>();        
 
         #region Check Left and Right
         bool LeftIsMatch = CheckLeftCombination();
@@ -115,16 +192,15 @@ public class Cell : MonoBehaviour,  IPointerClickHandler, IPointerUpHandler,IBeg
             {
                 MatchedList.Add(this);
                 MatchedList.Add(LeftCell);
-                MatchedList.Add(LeftCell.LeftCell);
-                
-                return true;
+                MatchedList.Add(LeftCell.LeftCell);                
+                return MatchedList;
             }
             else if (RightIsMatch)
             {
                 MatchedList.Add(this);
                 MatchedList.Add(LeftCell);
                 MatchedList.Add(RightCell);
-                return true;
+                return MatchedList;
             }
         }
 
@@ -135,7 +211,7 @@ public class Cell : MonoBehaviour,  IPointerClickHandler, IPointerUpHandler,IBeg
                 MatchedList.Add(this);
                 MatchedList.Add(RightCell);
                 MatchedList.Add(RightCell.RightCell);
-                return true;
+                return MatchedList;
             }
         }
         #endregion
@@ -151,14 +227,14 @@ public class Cell : MonoBehaviour,  IPointerClickHandler, IPointerUpHandler,IBeg
                 MatchedList.Add(this);
                 MatchedList.Add(UpCell);
                 MatchedList.Add(UpCell.UpCell);
-                return true;
+                return MatchedList;
             }
             else if (DownIsMacth)
             {
                 MatchedList.Add(this);
                 MatchedList.Add(UpCell);
                 MatchedList.Add(DownCell);
-                return true;
+                return MatchedList;
             }
         }
 
@@ -169,13 +245,13 @@ public class Cell : MonoBehaviour,  IPointerClickHandler, IPointerUpHandler,IBeg
                 MatchedList.Add(this);
                 MatchedList.Add(DownCell);
                 MatchedList.Add(DownCell.DownCell);
-                return true;
+                return MatchedList;
             }
         }
         #endregion
 
 
-        return false;
+        return MatchedList;
       
     }
 

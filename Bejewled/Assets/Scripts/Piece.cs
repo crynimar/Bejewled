@@ -27,6 +27,8 @@ public class Piece : MonoBehaviour
     [SerializeField] private float animationSpeed;
 
     public PieceType PieceCandyType { get => pieceCandyType; set => pieceCandyType = value; }
+    public Cell CurrentCell { get => currentCell; set => currentCell = value; }
+    public RectTransform RectTransform { get => rectTransform; set => rectTransform = value; }
 
     private Sprite currentSprite;
     private UnityAction finishSwipeAnimation;
@@ -42,10 +44,19 @@ public class Piece : MonoBehaviour
 
     public void Init(Cell c)
     {
-        this.rectTransform.anchoredPosition = Vector3.zero;
-        currentCell = c;
+
+        transform.SetParent(c.transform);
+        CurrentCell = c;
         RandomizePiece();
-        finishSwipeAnimation += currentCell.PieceFinishSwipeAnimation;
+    }
+
+    public void SubscribeAction()
+    {
+        finishSwipeAnimation += CurrentCell.PieceFinishSwipeAnimation;
+    }
+    public void UnsubscribeAction()
+    {
+        finishSwipeAnimation -= CurrentCell.PieceFinishSwipeAnimation;
     }
 
     public void Animate()
@@ -53,22 +64,27 @@ public class Piece : MonoBehaviour
         //use move toward to next cell
     }
 
-    public void SwipeAnimation(bool returningAnimation)
+    public void SwipeAnimation(bool needCallAction)
     {
-        StartCoroutine(SwipeAnimationCoroutine(returningAnimation));
+        StartCoroutine(GoToNewCellAnimation(needCallAction));
+    }
+    
+    public void GoDownAnimation()
+    {
+        StartCoroutine(GoToNewCellAnimation(false));
     }
 
-    IEnumerator SwipeAnimationCoroutine(bool returningAnimation)
+    IEnumerator GoToNewCellAnimation(bool callAction)
     {
-        while (rectTransform.anchoredPosition != Vector2.zero)
+        while (RectTransform.anchoredPosition != Vector2.zero)
         {
             float step = animationSpeed * Time.deltaTime; // calculate distance to move
-            rectTransform.anchoredPosition = Vector3.MoveTowards(rectTransform.anchoredPosition, Vector2.zero, step);
+            RectTransform.anchoredPosition = Vector3.MoveTowards(RectTransform.anchoredPosition, Vector2.zero, step);
             yield return null;
         }
 
-        if(!returningAnimation)
-        finishSwipeAnimation.Invoke();
+        if(callAction)
+            finishSwipeAnimation.Invoke();
     }
  
 }

@@ -44,4 +44,16 @@ public class GameManager : MonoBehaviour
             lastCellClicked = null;
         }
     }
+
+    public void ResolveMatch(List<Cell> matchedCells)
+    {
+        foreach (Cell c in matchedCells)
+        {
+            c.CurrentPiece.CurrentCell = null;
+            PiecePooling.Instance.PoolOnePiece(c.CurrentPiece);
+            c.CurrentPiece = null;
+            //c.InitMatch();
+        }
+        GridPanel.FillGrid();
+    }
 }

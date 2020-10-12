@@ -24,14 +24,15 @@ public class Grid : MonoBehaviour
                 Cell cell = Instantiate(cellPrefab, transform);
                 cell.name= string.Format("Cell-{0},{1}", i, j);
                 CellinGrid[i, j] = cell;
-                cell.Init(i, j);  
+                cell.Init(i, j);
+                cell.CurrentGrid = this;
             }
         }
 
         PositionCells();
         PopulateAdjacentCells();
-       // CheckCombinations();
     }
+
 
     private void PositionCells()
     {
@@ -40,7 +41,7 @@ public class Grid : MonoBehaviour
 
         foreach(Cell c in CellinGrid)
         {
-            c.rectTransform.anchoredPosition = new Vector3(pieceSize * index, row, 0);
+            c.RectTransform.anchoredPosition = new Vector3(pieceSize * index, row, 0);
             index++;
 
             if (index % width == 0)
@@ -69,43 +70,29 @@ public class Grid : MonoBehaviour
             }
         }
     }
+    public void FillGrid()
+    {
+        foreach (Cell c in CellinGrid)
+        {
+            if (c.CurrentPiece == null)
+            {
+                c.InitMatch();
+            }
+        }
+    }
 
-   // private void CheckCombinations()
-   // {
-   //     bool checkMatch = false;
-   //     Cell currentCell;
-   //     Cell nextCell;
-   //     List<Cell> MatchedCells = new List<Cell>();
-   //
-   //     for (int i = 0; i < width; i++)
-   //     {
-   //        
-   //         for (int j = 0; j < height; j++)
-   //         {
-   //             checkMatch = CellinGrid[i, j].CheckCombinations();
-   //             if (checkMatch)
-   //                 return;
-   //             //if (currentCell.RightCell == null) continue;
-   //             //
-   //             //nextCell = currentCell.RightCell; //next cell is right cell
-   //             //
-   //             //if (currentCell.CurrentPiece.PieceCandyType == nextCell.CurrentPiece.PieceCandyType)
-   //             //{
-   //             //    currentCell = nextCell;
-   //             //    if (currentCell.RightCell == null) continue;
-   //             //
-   //             //    nextCell = currentCell.RightCell;
-   //             //
-   //             //    if (currentCell.CurrentPiece.PieceCandyType == nextCell.CurrentPiece.PieceCandyType)
-   //             //    {
-   //             //        match = true;
-   //             //        MatchedCells.Add(nextCell);
-   //             //        MatchedCells.Add(currentCell);
-   //             //        MatchedCells.Add(CellinGrid[i, j]);
-   //             //        break;
-   //             //    }
-   //             //}
-   //         }
-   //     }
-   // }
+    public void GenerateNewPiece(Cell c)
+    {
+        Piece p = PiecePooling.Instance.GetPiece();
+        c.CurrentPiece = p;
+
+        p.Init(c);
+        p.UnsubscribeAction();
+        p.SubscribeAction();
+
+        p.transform.SetParent(c.transform);
+        p.RectTransform.anchoredPosition = new Vector2(0,pieceSize);
+        p.GoDownAnimation();
+
+    }
 }
