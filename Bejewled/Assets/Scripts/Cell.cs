@@ -109,6 +109,9 @@ public class Cell : MonoBehaviour,  IPointerClickHandler, IPointerUpHandler,IBeg
         c.CurrentPiece = CurrentPiece;
         CurrentPiece = tempPiece;
 
+        currentPiece.CurrentCell = this;
+        c.currentPiece.CurrentCell = c;
+
         CurrentPiece.SwipeAnimation(needCallAction);
         c.CurrentPiece.SwipeAnimation(needCallAction);
     }

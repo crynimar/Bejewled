@@ -6,9 +6,10 @@ using UnityEngine;
 public class GameManager : MonoBehaviour
 {
     public static GameManager Instance;   
+
     [SerializeField] private Grid GridPanel;
 
-    private Cell lastCellClicked;
+    [SerializeField] private Cell lastCellClicked;
 
     void Awake()
     {
@@ -29,7 +30,7 @@ public class GameManager : MonoBehaviour
 
     public void CellWasClicked(Cell c)
     {
-        if(lastCellClicked== null)
+        if(lastCellClicked == null)
             lastCellClicked = c;
 
         else if (lastCellClicked == c)

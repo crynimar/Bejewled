@@ -42,7 +42,6 @@ public class Piece : MonoBehaviour
 
     public void Init(Cell c)
     {
-
         transform.SetParent(c.transform);
         CurrentCell = c;
         RandomizePiece();
