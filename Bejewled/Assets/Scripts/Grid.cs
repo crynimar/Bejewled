@@ -87,12 +87,9 @@ public class Grid : MonoBehaviour
         c.CurrentPiece = p;
 
         p.Init(c);
-        p.UnsubscribeAction();
-        p.SubscribeAction();
 
         p.transform.SetParent(c.transform);
-        p.RectTransform.anchoredPosition = new Vector2(0,pieceSize);
+        p.RectTransform.anchoredPosition = new Vector2(0, pieceSize); 
         p.GoDownAnimation();
-
     }
 }

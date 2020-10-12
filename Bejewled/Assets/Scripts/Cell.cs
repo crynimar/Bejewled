@@ -42,71 +42,45 @@ public class Cell : MonoBehaviour,  IPointerClickHandler, IPointerUpHandler,IBeg
         {
             piece.Init(this);
             piece.RectTransform.anchoredPosition = Vector3.zero;
-            piece.SubscribeAction();
             CurrentPiece = piece;
         }
         else
-            Debug.Log("Failed in receive Piece");
+            Debug.LogError("Failed in receive Piece");
     }
 
     public void InitMatch()
     {
-        UpdadePieces();
+        if (UpCell)
+            UpCell.SendPieceDown();
+        else
+            currentGrid.GenerateNewPiece(this);
+
     }
 
-    private void UpdadePieces()
-    {
-        // if(UpCell)
-        // {   
-        //     currentPiece = UpCell.CurrentPiece;
-        //     currentPiece.CurrentCell = this;
-        //     currentPiece.transform.SetParent(transform);
-        //     currentPiece.GoDownAnimation();
-        //     UpCell.UpdadePieces();
-        //     //Apaga peça
-        //     //manda peça pro pool
-        //     //puxa peça de cima
-        //     //faz a peça de cima fazer o mesmo
-        // }
-        // else
-        // {
-        //     //cria nova peça
-        // }
-
-        if (UpCell)
-        {
-            UpCell.SendPieceDown();
-        }
-       // else
-       //     grid.GenerateNewPiece(this);
-    }   
-
     public void SendPieceDown()
-    {   
-        if (CurrentPiece == null)
-        {     
+    {
+         if (CurrentPiece == null)
+        {
             if(UpCell)
             {
                 UpCell.SendPieceDown();
-            }
+            }    
         }
 
         if (CurrentPiece != null)
         {
             if (DownCell)
             {
-                CurrentPiece.UnsubscribeAction();
                 DownCell.CurrentPiece = CurrentPiece;
                 CurrentPiece.CurrentCell = DownCell;
                 CurrentPiece.transform.SetParent(DownCell.transform);
 
                 CurrentPiece.GoDownAnimation();
-                currentPiece = null;
-                DownCell.CurrentPiece.SubscribeAction();
+                CurrentPiece = null;
 
-                if (UpCell)
-                    UpCell.SendPieceDown();
-                else
+                if (UpCell)                
+                    UpCell.SendPieceDown();                
+                else                
                     currentGrid.GenerateNewPiece(this);
             }
         }
@@ -158,22 +132,19 @@ public class Cell : MonoBehaviour,  IPointerClickHandler, IPointerUpHandler,IBeg
                 SwipePieces(lastSwipedCell, false); //Swipe back  
             else
             {
-                GameManager.Instance.ResolveMatch(MatchedList); //Resolve Match
-
-                //Call pieces to unsbcribe from their method and subscribe to the new parent method
-                lastSwipedCell.CurrentPiece.UnsubscribeAction();
-                CurrentPiece.UnsubscribeAction();
-                lastSwipedCell.CurrentPiece.SubscribeAction();
-                CurrentPiece.SubscribeAction();
-                lastSwipedCell = null;
+                ResolveMatch(MatchedList);
             }
         }
         else
         {
-            Debug.Log("COmination");
-            GameManager.Instance.ResolveMatch(MatchedList); //Resolve Match
-            lastSwipedCell = null;
+            ResolveMatch(MatchedList);
         }
+    }
+
+    private void ResolveMatch(List<Cell> MatchedList)
+    {
+        GameManager.Instance.ResolveMatch(MatchedList); //Resolve Match       
+        lastSwipedCell = null;
     }
 
 

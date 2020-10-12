@@ -2,7 +2,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Events;
 using UnityEngine.UI ;
 
 public enum PieceType
@@ -31,7 +30,6 @@ public class Piece : MonoBehaviour
     public RectTransform RectTransform { get => rectTransform; set => rectTransform = value; }
 
     private Sprite currentSprite;
-    private UnityAction finishSwipeAnimation;
 
     public void RandomizePiece()
     {
@@ -48,16 +46,7 @@ public class Piece : MonoBehaviour
         transform.SetParent(c.transform);
         CurrentCell = c;
         RandomizePiece();
-    }
-
-    public void SubscribeAction()
-    {
-        finishSwipeAnimation += CurrentCell.PieceFinishSwipeAnimation;
-    }
-    public void UnsubscribeAction()
-    {
-        finishSwipeAnimation -= CurrentCell.PieceFinishSwipeAnimation;
-    }
+    }   
 
     public void Animate()
     {
@@ -83,8 +72,8 @@ public class Piece : MonoBehaviour
             yield return null;
         }
 
-        if(callAction)
-            finishSwipeAnimation.Invoke();
+        if (callAction)
+            CurrentCell.PieceFinishSwipeAnimation();
     }
  
 }
