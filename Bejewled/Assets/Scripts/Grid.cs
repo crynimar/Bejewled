@@ -9,8 +9,10 @@ public class Grid : MonoBehaviour
     [SerializeField] private int width;
     [SerializeField] private int height;
     [SerializeField] private int pieceSize;
+    [SerializeField] private float eraseSpeed;
 
     private Cell[,] CellinGrid;
+
 
     public void InitGrid()
     {
@@ -33,7 +35,13 @@ public class Grid : MonoBehaviour
         PopulateAdjacentCells();
     }
 
-
+    void Update()
+    {
+        if (Input.GetKeyDown("space"))
+        {
+            CheckGridMatchs();
+        }
+    }
     private void PositionCells()
     {
         int index= 0;
@@ -79,6 +87,8 @@ public class Grid : MonoBehaviour
                 c.InitMatch();
             }
         }
+
+        CheckGridMatchs();
     }
 
     public void GenerateNewPiece(Cell c)
@@ -92,4 +102,28 @@ public class Grid : MonoBehaviour
         p.RectTransform.anchoredPosition = new Vector2(0, pieceSize); 
         p.GoDownAnimation();
     }
+
+    public void CheckGridMatchs()
+    {
+        List<Cell> matchList = new List<Cell>();
+        foreach (Cell c in CellinGrid)
+        {
+            matchList = c.CheckCombinations();
+            if (matchList.Count > 0)
+            {
+                StartCoroutine(CallResolveMatch(matchList));
+                break;
+            }                
+        }       
+    }
+
+    IEnumerator CallResolveMatch(List<Cell> matchList)
+    {
+        GameManager.Instance.CanPlay = false;
+        yield return new WaitForSeconds(eraseSpeed);
+        GameManager.Instance.ResolveMatch(matchList);
+        GameManager.Instance.CanPlay = true;
+    }
+
+   
 }

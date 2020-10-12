@@ -11,6 +11,10 @@ public class GameManager : MonoBehaviour
 
     [SerializeField] private Cell lastCellClicked;
 
+    private bool canPlay = false;
+
+    public bool CanPlay { get => canPlay; set => canPlay = value; }
+
     void Awake()
     {
         //Create Singleton instance
@@ -26,24 +30,29 @@ public class GameManager : MonoBehaviour
     private void Init()
     {
         GridPanel.InitGrid();
+        CanPlay = true;
     }
 
     public void CellWasClicked(Cell c)
     {
-        if(lastCellClicked == null)
-            lastCellClicked = c;
-
-        else if (lastCellClicked == c)
-        {          
-            lastCellClicked = null;
-            return;
-        }
-
-        else
+        if (CanPlay)
         {
-            lastCellClicked.CanSwipePieces(c);
-            lastCellClicked = null;
+            if (lastCellClicked == null)
+                lastCellClicked = c;
+
+            else if (lastCellClicked == c)
+            {
+                lastCellClicked = null;
+                return;
+            }
+
+            else
+            {
+                lastCellClicked.CanSwipePieces(c);
+                lastCellClicked = null;
+            }
         }
+        lastCellClicked = null;
     }
 
     public void ResolveMatch(List<Cell> matchedCells)
