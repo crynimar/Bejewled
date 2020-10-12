@@ -6,11 +6,11 @@ public class PiecePooling : MonoBehaviour
 {
     public static PiecePooling Instance;
 
-    [SerializeField] private int PoolSize;
-    [SerializeField] private Piece PiceToPool;
+    [SerializeField] private int poolSize;
+    [SerializeField] private Piece piceToPool;
 
-    [SerializeField] private Queue<Piece> PooledPieces;
-    [SerializeField] private List<Piece> InUsePieces;
+    [SerializeField] private Queue<Piece> pooledPieces;
+    [SerializeField] private List<Piece> inUsePieces;
 
     void Awake()
     {
@@ -23,24 +23,24 @@ public class PiecePooling : MonoBehaviour
 
     private void InitPooling()
     {
-        PooledPieces = new Queue<Piece>();
-        InUsePieces = new List<Piece>();
+        pooledPieces = new Queue<Piece>();
+        inUsePieces = new List<Piece>();
 
-        for (int i = 0; i < PoolSize; i++)
+        for (int i = 0; i < poolSize; i++)
         {
-            Piece piece =  Instantiate(PiceToPool, transform);
+            Piece piece =  Instantiate(piceToPool, transform);
             piece.gameObject.SetActive(false);
-            PooledPieces.Enqueue(piece);
+            pooledPieces.Enqueue(piece);
         }
     }
 
     public Piece GetPiece()
     {
-        if (PooledPieces.Count > 0)
+        if (pooledPieces.Count > 0)
         {
-            Piece piece = PooledPieces.Dequeue();
+            Piece piece = pooledPieces.Dequeue();
             piece.gameObject.SetActive(true);
-            InUsePieces.Add(piece);
+            inUsePieces.Add(piece);
 
             return piece;
         }
@@ -53,12 +53,12 @@ public class PiecePooling : MonoBehaviour
 
    public void PoolOnePiece(Piece piece)
    {
-        if (InUsePieces.Contains(piece))
+        if (inUsePieces.Contains(piece))
         {
-            InUsePieces.Remove(piece);
+            inUsePieces.Remove(piece);
             piece.gameObject.SetActive(false);
             piece.transform.SetParent(transform);
-            PooledPieces.Enqueue(piece);
+            pooledPieces.Enqueue(piece);
         }
         else
             Debug.LogError("This piece was not in use");

@@ -157,7 +157,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 520, y: 520}
+  m_SizeDelta: {x: 512, y: 512}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &29130277
 MonoBehaviour:
@@ -208,11 +208,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 891a8708768cda94aaba789e4ead3af7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  PiecePrefab: {fileID: 3756504306044726449, guid: cbc10554608a14643ab16814a7d1d72e,
+  cellPrefab: {fileID: 7543506493392791041, guid: eee0828007dae594cb9960d0dc0fbabf,
     type: 3}
   width: 8
   height: 8
-  PieceSize: 64
+  pieceSize: 64
 --- !u!1 &519420028
 GameObject:
   m_ObjectHideFlags: 0
@@ -369,10 +369,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4589941f3f6c126409e781b71075c6e9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  PoolSize: 100
-  PiceToPool: {fileID: 3756504306044726449, guid: cbc10554608a14643ab16814a7d1d72e,
+  poolSize: 100
+  piceToPool: {fileID: 3756504306044726449, guid: cbc10554608a14643ab16814a7d1d72e,
     type: 3}
-  InUsePieces: []
+  inUsePieces: []
 --- !u!4 &1567317300
 Transform:
   m_ObjectHideFlags: 0

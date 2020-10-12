@@ -87,8 +87,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2ee449174d852f244bb87f6e5e5f2923, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  RectTransform: {fileID: 4517846944203778151}
-  PossibleSprites:
+  rectTransform: {fileID: 4517846944203778151}
+  pieceCandyType: 0
+  possibleSprites:
   - {fileID: 21300000, guid: e488417a2c95b400d829a3c15a530a61, type: 3}
   - {fileID: 21300000, guid: 08f0363d8c4bc4d7fac08b855cae2516, type: 3}
   - {fileID: 21300000, guid: 86fe3cabe72b14bf1b9092f7821222ed, type: 3}
@@ -97,5 +98,5 @@ MonoBehaviour:
   - {fileID: 21300000, guid: 28c82859ed06f433fa96b20378c316d5, type: 3}
   - {fileID: 21300000, guid: 0880325b431534468997449729cade2e, type: 3}
   - {fileID: 21300000, guid: 6c6e19955f5eb434facf992f895ebb0a, type: 3}
-  ImageComponent: {fileID: 6388652894048750615}
-  currentPosInBoard: {x: 0, y: 0}
+  imageComponent: {fileID: 6388652894048750615}
+  animationSpeed: 150

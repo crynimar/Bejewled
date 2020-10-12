@@ -5,9 +5,10 @@ using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
-    public static GameManager Instance;
-   
-    [SerializeField] private Grid GridPanel;   
+    public static GameManager Instance;   
+    [SerializeField] private Grid GridPanel;
+
+    private Cell lastCellClicked;
 
     void Awake()
     {
@@ -24,5 +25,23 @@ public class GameManager : MonoBehaviour
     private void Init()
     {
         GridPanel.InitGrid();
+    }
+
+    public void CellWasClicked(Cell c)
+    {
+        if(lastCellClicked== null)
+            lastCellClicked = c;
+
+        else if (lastCellClicked == c)
+        {          
+            lastCellClicked = null;
+            return;
+        }
+
+        else
+        {
+            lastCellClicked.CanSwipePieces(c);
+            lastCellClicked = null;
+        }
     }
 }

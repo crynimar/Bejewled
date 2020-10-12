@@ -1,6 +1,8 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.UI ;
 
 public enum PieceType
@@ -17,34 +19,56 @@ public enum PieceType
 
 public class Piece : MonoBehaviour
 {
-    [SerializeField] private RectTransform RectTransform;
-    [SerializeField] private PieceType PieceCandyType;
-    [SerializeField] private Sprite[] PossibleSprites;
-    [SerializeField] private Image ImageComponent;
+    [SerializeField] private RectTransform rectTransform;
+    [SerializeField] private PieceType pieceCandyType;
+    [SerializeField] private Sprite[] possibleSprites;
     [SerializeField] private Cell currentCell;
+    [SerializeField] private Image imageComponent;
+    [SerializeField] private float animationSpeed;
 
-    public PieceType pieceCandyType { get => PieceCandyType; set => PieceCandyType = value; }
+    public PieceType PieceCandyType { get => pieceCandyType; set => pieceCandyType = value; }
 
-    private Sprite CurrentSprite;
+    private Sprite currentSprite;
+    private UnityAction finishSwipeAnimation;
 
     public void RandomizePiece()
     {
-        int rand = Random.Range(0, PossibleSprites.Length);
-        CurrentSprite = PossibleSprites[rand];
-        ImageComponent.sprite = CurrentSprite;
+        int rand = UnityEngine.Random.Range(0, possibleSprites.Length);
+        currentSprite = possibleSprites[rand];
+        imageComponent.sprite = currentSprite;
 
         pieceCandyType = (PieceType)rand;
     }
-    public void Init(Cell cell)
-    {
-        currentCell = cell;
-        this.RectTransform.anchoredPosition = Vector3.zero;
 
+    public void Init(Cell c)
+    {
+        this.rectTransform.anchoredPosition = Vector3.zero;
+        currentCell = c;
         RandomizePiece();
-        
+        finishSwipeAnimation += currentCell.PieceFinishSwipeAnimation;
     }
+
     public void Animate()
     {
         //use move toward to next cell
     }
+
+    public void SwipeAnimation(bool returningAnimation)
+    {
+        StartCoroutine(SwipeAnimationCoroutine(returningAnimation));
+    }
+
+    IEnumerator SwipeAnimationCoroutine(bool returningAnimation)
+    {
+        while (rectTransform.anchoredPosition != Vector2.zero)
+        {
+            float step = animationSpeed * Time.deltaTime; // calculate distance to move
+            rectTransform.anchoredPosition = Vector3.MoveTowards(rectTransform.anchoredPosition, Vector2.zero, step);
+            yield return null;
+        }
+
+        if(!returningAnimation)
+        finishSwipeAnimation.Invoke();
+    }
+ 
 }
