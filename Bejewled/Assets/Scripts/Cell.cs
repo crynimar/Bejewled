@@ -107,11 +107,11 @@ public class Cell : MonoBehaviour,  IPointerClickHandler, IPointerUpHandler, IPo
         else if(cellToChange == UpCell) SwipePieces(UpCell);
         else if(cellToChange == DownCell) SwipePieces(DownCell);        
     }
-    private void SwipePieces(Cell c, bool needCallAction = true) // Action will tell if need to return animation
+    private void SwipePieces(Cell c, bool backFromSwipe = false) // Action will tell if need to return animation
     {
         lastSwipedCell = c;
 
-        if (!needCallAction)
+        if (backFromSwipe)
             lastSwipedCell = null;
 
         Piece tempPiece = c.CurrentPiece;
@@ -125,8 +125,8 @@ public class Cell : MonoBehaviour,  IPointerClickHandler, IPointerUpHandler, IPo
         currentPiece.CurrentCell = this;
         c.currentPiece.CurrentCell = c;
 
-        CurrentPiece.SwipeAnimation(needCallAction);
-        c.CurrentPiece.SwipeAnimation(needCallAction);
+        CurrentPiece.SwipeAnimation(backFromSwipe);
+        c.CurrentPiece.SwipeAnimation(backFromSwipe);
     }
 
     public void PieceFinishSwipeAnimation()
@@ -145,7 +145,7 @@ public class Cell : MonoBehaviour,  IPointerClickHandler, IPointerUpHandler, IPo
             MatchedList = lastSwipedCell.CheckCombinations();
 
             if(MatchedList.Count<=0)            
-                SwipePieces(lastSwipedCell, false); //Swipe back  
+                SwipePieces(lastSwipedCell, true); //back from swipe
             else
             {
                 ResolveMatch(MatchedList);

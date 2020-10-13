@@ -11,11 +11,32 @@ public class GameManager : MonoBehaviour
 
     [SerializeField] private Cell lastCellClicked;
     [SerializeField] private float pieceAnimationDethTime;
-    [SerializeField] private bool canPlay = false;
+    [SerializeField] private bool canPlay;
     [SerializeField] private Cell currentMouseOverCell;
-    
 
-    public bool CanPlay { get => canPlay; }
+    [SerializeField] private int piecesAnimating = 0;
+    [SerializeField] private bool stillLookingForMatch = false;
+
+    public bool CanPlay{ get => canPlay; set => canPlay = value; }
+    public bool StillLookingForMatch { get => stillLookingForMatch; set => stillLookingForMatch = value; }
+
+    public int PiecesAnimating 
+    {
+        get => piecesAnimating;
+
+        set
+        {
+            piecesAnimating = value;
+
+            if (piecesAnimating == 0 && !StillLookingForMatch)
+                CanPlay = true;
+            else
+                CanPlay = false;        
+         
+        }
+    }
+
+   
 
     void Awake()
     {
@@ -26,6 +47,7 @@ public class GameManager : MonoBehaviour
 
     private void Start()
     {
+        CanPlay = false;
         Init();
     }
 
@@ -68,9 +90,7 @@ public class GameManager : MonoBehaviour
         }
 
         GridPanel.FillGrid();
-    }   
-   
-    public void SetCanPlay(bool value) => canPlay = value;
+    }        
 
     public void HandleMouseOverCell(Cell c)
     {
@@ -92,7 +112,6 @@ public class GameManager : MonoBehaviour
             {
                 lastCellClicked = null;
                 dragged.CanSwipePieces(currentMouseOverCell);
-               // SetCanPlay(false);
             }
         }
     }

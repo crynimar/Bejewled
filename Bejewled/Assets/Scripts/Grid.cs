@@ -34,6 +34,7 @@ public class Grid : MonoBehaviour
         PopulateAdjacentCells();
         CheckGridMatchs();        
     }
+
     private void PositionCells()
     {
         int index= 0;
@@ -97,8 +98,7 @@ public class Grid : MonoBehaviour
 
     public void CheckGridMatchs()
     {
-        GameManager.Instance.SetCanPlay(false);
-
+       GameManager.Instance.StillLookingForMatch = true;
         List<Cell> matchList = new List<Cell>();
         foreach (Cell c in CellinGrid)
         {
@@ -108,9 +108,8 @@ public class Grid : MonoBehaviour
                 StartCoroutine(CallResolveMatch(matchList));
                 return;
             }                
-        }       
-
-        GameManager.Instance.SetCanPlay(true);
+        }
+        GameManager.Instance.StillLookingForMatch = false;
     }
 
     IEnumerator CallResolveMatch(List<Cell> matchList)

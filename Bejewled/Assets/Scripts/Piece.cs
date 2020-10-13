@@ -62,8 +62,10 @@ public class Piece : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHan
         StartCoroutine(GoToNewCellAnimation(false));
     }
 
-    IEnumerator GoToNewCellAnimation(bool callAction)
+    IEnumerator GoToNewCellAnimation(bool backFromSwipe)
     {
+        GameManager.Instance.PiecesAnimating++;
+
         while (RectTransform.anchoredPosition != Vector2.zero)
         {
             float step = animationSpeed * Time.deltaTime; // calculate distance to move
@@ -71,8 +73,10 @@ public class Piece : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHan
             yield return null;
         }
 
-        if (callAction)
+        if (!backFromSwipe)
             CurrentCell.PieceFinishSwipeAnimation();
+
+        GameManager.Instance.PiecesAnimating--;
     }
 
 
