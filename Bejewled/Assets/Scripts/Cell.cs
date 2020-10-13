@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using UnityEngine.Events;
 using UnityEngine.EventSystems;
 
@@ -10,19 +11,25 @@ public class Cell : MonoBehaviour,  IPointerClickHandler, IPointerUpHandler,IBeg
     public Cell LeftCell, RightCell, UpCell, DownCell;
 
     [SerializeField] private RectTransform rectTransform;
+    [SerializeField] private Image imageComponent;
     [SerializeField] private Vector2 currentPosInBoard;
     [SerializeField] private Piece currentPiece;
-    [SerializeField] private Grid currentGrid;
+    [SerializeField] private Grid grid;
+    [SerializeField] public float colorFeedBackTime;
+
+    private Cell lastSwipedCell;
+    private Color startColor;
 
     public Piece CurrentPiece { get => currentPiece; set => currentPiece = value; }
-    public Grid CurrentGrid { get => currentGrid; set => currentGrid = value; }
+    public Grid Grid { get => grid; set => grid = value; }
     public RectTransform RectTransfom { get => rectTransform; set => rectTransform = value; }
+    public Image ImageComponent { get => imageComponent; set => imageComponent = value; }
 
-    private Cell lastSwipedCell;   
     //private bool alreadySwipedPieces = false;
 
     public void Init(int posX, int posY)
     {
+        startColor = ImageComponent.color;
         currentPosInBoard = new Vector2(posX, posY);
         ReceivePiece();        
     }
@@ -49,12 +56,18 @@ public class Cell : MonoBehaviour,  IPointerClickHandler, IPointerUpHandler,IBeg
             Debug.LogError("Failed in receive Piece");
     }
 
+
+    public void ChangeColorFeedBack(Color c)
+    {
+        imageComponent.color = c;
+        StartCoroutine(ChangeColorToOriginal());
+    }
     public void InitMatch()
     {
         if (UpCell)
             UpCell.SendPieceDown();
         else
-            currentGrid.GenerateNewPiece(this);
+            grid.GenerateNewPiece(this);
     }
 
     public void SendPieceDown()
@@ -81,7 +94,7 @@ public class Cell : MonoBehaviour,  IPointerClickHandler, IPointerUpHandler,IBeg
                 if (UpCell)                
                     UpCell.SendPieceDown();                
                 else                
-                    currentGrid.GenerateNewPiece(this);
+                    grid.GenerateNewPiece(this);
             }
         }
 
@@ -149,7 +162,14 @@ public class Cell : MonoBehaviour,  IPointerClickHandler, IPointerUpHandler,IBeg
         GameManager.Instance.ResolveMatch(MatchedList); //Resolve Match       
         lastSwipedCell = null;
     }
-  
+
+    IEnumerator ChangeColorToOriginal()
+    {
+        yield return new WaitForSeconds(colorFeedBackTime);
+        ChangeColorFeedBack(startColor);
+
+    }
+
     #region Check Combinations
     public List<Cell> CheckCombinations()
     {
@@ -264,7 +284,8 @@ public class Cell : MonoBehaviour,  IPointerClickHandler, IPointerUpHandler,IBeg
     #region Interface Implementations
     public void OnPointerUp(PointerEventData eventData)
     {
-        GameManager.Instance.CellWasClicked(this);
+        if(GameManager.Instance.CanPlay)
+            GameManager.Instance.CellWasClicked(this);
     }
     public void OnBeginDrag(PointerEventData eventData)
     {

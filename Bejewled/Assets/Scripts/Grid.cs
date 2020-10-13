@@ -26,7 +26,7 @@ public class Grid : MonoBehaviour
                 cell.name= string.Format("Cell-{0},{1}", i, j);
                 CellinGrid[i, j] = cell;
                 cell.Init(i, j);
-                cell.CurrentGrid = this;
+                cell.Grid = this;
             }
         }
 
@@ -98,6 +98,7 @@ public class Grid : MonoBehaviour
     public void CheckGridMatchs()
     {
         GameManager.Instance.SetCanPlay(false);
+
         List<Cell> matchList = new List<Cell>();
         foreach (Cell c in CellinGrid)
         {
@@ -105,18 +106,17 @@ public class Grid : MonoBehaviour
             if (matchList.Count > 0)
             {
                 StartCoroutine(CallResolveMatch(matchList));
-                break;
+                return;
             }                
         }       
+
         GameManager.Instance.SetCanPlay(true);
     }
 
     IEnumerator CallResolveMatch(List<Cell> matchList)
     {
-        GameManager.Instance.SetCanPlay(false);
         yield return new WaitForSeconds(eraseSpeed);
-        GameManager.Instance.ResolveMatch(matchList);
-        GameManager.Instance.SetCanPlay(true);
+        GameManager.Instance.ResolveMatch(matchList);       
     }
 
    
