@@ -75,10 +75,7 @@ public class Piece : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHan
         GameManager.Instance.PiecesAnimating--;
         if (!backFromSwipe)
             CurrentCell.PieceFinishSwipeAnimation();
-
     }
-
-
 
     #region Interface Implementations
 
