@@ -6,7 +6,7 @@ using UnityEngine.UI;
 using UnityEngine.Events;
 using UnityEngine.EventSystems;
 
-public class Cell : MonoBehaviour,  IPointerClickHandler, IPointerUpHandler,IBeginDragHandler, IDragHandler, IEndDragHandler
+public class Cell : MonoBehaviour,  IPointerClickHandler, IPointerUpHandler, IPointerExitHandler, IPointerEnterHandler
 {
     public Cell LeftCell, RightCell, UpCell, DownCell;
 
@@ -286,20 +286,18 @@ public class Cell : MonoBehaviour,  IPointerClickHandler, IPointerUpHandler,IBeg
     {
         if(GameManager.Instance.CanPlay)
             GameManager.Instance.CellWasClicked(this);
-    }
-    public void OnBeginDrag(PointerEventData eventData)
-    {
-        Debug.Log("begin drag");
-    }
-    public void OnDrag(PointerEventData eventData)
-    {
-        Debug.Log("on drag");
-    }
-    public void OnEndDrag(PointerEventData eventData)
-    {
-        Debug.Log("end drag");
-    }     
+    }  
 
     public void OnPointerClick(PointerEventData eventData){}
+
+    public void OnPointerExit(PointerEventData eventData)
+    {
+        GameManager.Instance.HandleMouseExitCell(this);
+    }
+
+    public void OnPointerEnter(PointerEventData eventData)
+    {
+        GameManager.Instance.HandleMouseOverCell(this);
+    }
     #endregion
 }

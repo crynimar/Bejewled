@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI ;
 
 public enum PieceType
@@ -13,7 +14,7 @@ public enum PieceType
     GummyBeard,
 }
 
-public class Piece : MonoBehaviour
+public class Piece : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler
 {
     [SerializeField] private RectTransform rectTransform;
     [SerializeField] private PieceType pieceCandyType;
@@ -22,11 +23,13 @@ public class Piece : MonoBehaviour
     [SerializeField] private Image imageComponent;
     [SerializeField] private float animationSpeed;
 
+    private bool isDragging = false;
+    private Sprite currentSprite;
+
     public PieceType PieceCandyType { get => pieceCandyType; set => pieceCandyType = value; }
     public Cell CurrentCell { get => currentCell; set => currentCell = value; }
     public RectTransform RectTransform { get => rectTransform; set => rectTransform = value; }
 
-    private Sprite currentSprite;
 
     public void RandomizePiece()
     {
@@ -71,4 +74,20 @@ public class Piece : MonoBehaviour
         if (callAction)
             CurrentCell.PieceFinishSwipeAnimation();
     }
+
+
+
+    #region Interface Implementations
+
+    public void OnBeginDrag(PointerEventData eventData){}
+
+    public void OnDrag(PointerEventData eventData){}
+
+    public void OnEndDrag(PointerEventData eventData)
+    {
+        if (GameManager.Instance.CanPlay)
+            GameManager.Instance.CheckDrag(CurrentCell);
+    }
+    
+    #endregion
 }

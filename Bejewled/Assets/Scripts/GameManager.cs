@@ -12,6 +12,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] private Cell lastCellClicked;
     [SerializeField] private float pieceAnimationDethTime;
     [SerializeField] private bool canPlay = false;
+    [SerializeField] private Cell currentMouseOverCell;
     
 
     public bool CanPlay { get => canPlay; }
@@ -71,4 +72,28 @@ public class GameManager : MonoBehaviour
    
     public void SetCanPlay(bool value) => canPlay = value;
 
+    public void HandleMouseOverCell(Cell c)
+    {
+        if (currentMouseOverCell == null || currentMouseOverCell != c)
+            currentMouseOverCell = c;        
+    }
+
+    public void HandleMouseExitCell(Cell c)
+    {
+        if (currentMouseOverCell = c)
+            currentMouseOverCell = null;        
+    }
+
+    public void CheckDrag(Cell dragged)
+    {
+        if (CanPlay)
+        {
+            if (dragged != currentMouseOverCell)
+            {
+                lastCellClicked = null;
+                dragged.CanSwipePieces(currentMouseOverCell);
+               // SetCanPlay(false);
+            }
+        }
+    }
 }
