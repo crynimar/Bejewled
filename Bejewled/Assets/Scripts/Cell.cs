@@ -116,17 +116,17 @@ public class Cell : MonoBehaviour,  IPointerClickHandler, IPointerUpHandler, IPo
 
         Piece tempPiece = c.CurrentPiece;
 
-        c.CurrentPiece.transform.SetParent(transform);
-        CurrentPiece.transform.SetParent(c.transform);
-
         c.CurrentPiece = CurrentPiece;
         CurrentPiece = tempPiece;
 
-        currentPiece.CurrentCell = this;
-        c.currentPiece.CurrentCell = c;
+        c.CurrentPiece.transform.SetParent(c.transform);
+        CurrentPiece.transform.SetParent(transform);     
 
-        CurrentPiece.SwipeAnimation(backFromSwipe);
+        c.currentPiece.CurrentCell = c;
+        currentPiece.CurrentCell = this;
+
         c.CurrentPiece.SwipeAnimation(backFromSwipe);
+        CurrentPiece.SwipeAnimation(backFromSwipe);
     }
 
     public void PieceFinishSwipeAnimation()

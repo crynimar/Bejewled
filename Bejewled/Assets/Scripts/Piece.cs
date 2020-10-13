@@ -23,7 +23,6 @@ public class Piece : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHan
     [SerializeField] private Image imageComponent;
     [SerializeField] private float animationSpeed;
 
-    private bool isDragging = false;
     private Sprite currentSprite;
 
     public PieceType PieceCandyType { get => pieceCandyType; set => pieceCandyType = value; }
@@ -73,10 +72,10 @@ public class Piece : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHan
             yield return null;
         }
 
+        GameManager.Instance.PiecesAnimating--;
         if (!backFromSwipe)
             CurrentCell.PieceFinishSwipeAnimation();
 
-        GameManager.Instance.PiecesAnimating--;
     }
 
 
