@@ -176,77 +176,94 @@ public class Cell : MonoBehaviour,  IPointerClickHandler, IPointerUpHandler, IPo
     {
         List<Cell> MatchedList = new List<Cell>();
 
-        #region Check Left and Right
-        bool LeftIsMatch = CheckLeftCombination();
-        bool RightIsMatch = CheckRightCombination();
+        Cell cellToCheck = this;
 
-        if(LeftIsMatch)
+        #region Check Horizontal
+
+        //Checking RIGHT
+        if (cellToCheck.CheckRightCombination())
         {
-            if (LeftCell.CheckLeftCombination())
+            MatchedList.Add(cellToCheck);
+            MatchedList.Add(cellToCheck.RightCell);
+
+            cellToCheck = cellToCheck.RightCell;         
+         
+            while (cellToCheck.CheckRightCombination())
             {
-                MatchedList.Add(this);
-                MatchedList.Add(LeftCell);
-                MatchedList.Add(LeftCell.LeftCell);                
-                return MatchedList;
+                cellToCheck = cellToCheck.RightCell;                
+                MatchedList.Add(cellToCheck);
             }
-            else if (RightIsMatch)
-            {
-                MatchedList.Add(this);
-                MatchedList.Add(LeftCell);
-                MatchedList.Add(RightCell);
-                return MatchedList;
-            }
+
+            cellToCheck = this;
         }
 
-        if(RightIsMatch)
+        //Checking LEFT
+        if (cellToCheck.CheckLeftCombination())
         {
-            if (RightCell.CheckRightCombination())
+            if(!MatchedList.Contains(cellToCheck))//If the cell exists on list
+                MatchedList.Add(cellToCheck);
+
+            MatchedList.Add(cellToCheck.LeftCell);
+
+            cellToCheck = cellToCheck.LeftCell;
+
+            while (cellToCheck.CheckLeftCombination())
             {
-                MatchedList.Add(this);
-                MatchedList.Add(RightCell);
-                MatchedList.Add(RightCell.RightCell);
-                return MatchedList;
+                cellToCheck = cellToCheck.LeftCell;
+                MatchedList.Add(cellToCheck);
             }
+            cellToCheck = this;
         }
+
+        if (MatchedList.Count < 3)        
+            MatchedList.Clear();
+
+        else
+            return MatchedList;
+
         #endregion
 
-        #region Check Up and Down
-        bool UpIsMacth = CheckUpCombination();
-        bool DownIsMacth = CheckDownCombination();
+        #region Check Vertical
 
-        if (UpIsMacth)
+        //Checking UP
+        if (cellToCheck.CheckUpCombination())
         {
-            if (UpCell.CheckUpCombination())
+            MatchedList.Add(cellToCheck);
+            MatchedList.Add(cellToCheck.UpCell);
+
+            cellToCheck = cellToCheck.UpCell;
+
+            while (cellToCheck.CheckUpCombination())
             {
-                MatchedList.Add(this);
-                MatchedList.Add(UpCell);
-                MatchedList.Add(UpCell.UpCell);
-                return MatchedList;
+                cellToCheck = cellToCheck.UpCell;
+                MatchedList.Add(cellToCheck);
             }
-            else if (DownIsMacth)
+
+            cellToCheck = this;
+        }
+
+        //Checking Down
+        if (cellToCheck.CheckDownCombination())
+        {
+            if (!MatchedList.Contains(cellToCheck)) //If the cell exists on list
+                MatchedList.Add(cellToCheck);
+
+            MatchedList.Add(cellToCheck.DownCell);
+
+            cellToCheck = cellToCheck.DownCell;
+
+            while (cellToCheck.CheckDownCombination())
             {
-                MatchedList.Add(this);
-                MatchedList.Add(UpCell);
-                MatchedList.Add(DownCell);
-                return MatchedList;
+                cellToCheck = cellToCheck.DownCell;
+                MatchedList.Add(cellToCheck);
             }
         }
 
-        if (DownIsMacth)
-        {
-            if (DownCell.CheckDownCombination())
-            {
-                MatchedList.Add(this);
-                MatchedList.Add(DownCell);
-                MatchedList.Add(DownCell.DownCell);
-                return MatchedList;
-            }
-        }
-        #endregion
-
-
+        if (MatchedList.Count < 3)
+            MatchedList.Clear();
+        
         return MatchedList;
-
+        #endregion
     }
 
     public bool CheckLeftCombination()

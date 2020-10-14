@@ -130,7 +130,6 @@ public class GameManager : MonoBehaviour
 
     private void CheckIfCanPlay()
     {
-        Debug.Log("piecesAnimating: " + piecesAnimating + " StillLookingForMatch: " + StillLookingForMatch);
         if (piecesAnimating == 0 && !StillLookingForMatch)
             CanPlay = true;
     }

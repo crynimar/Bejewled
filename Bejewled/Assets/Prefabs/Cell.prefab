@@ -96,4 +96,4 @@ MonoBehaviour:
   currentPosInBoard: {x: 0, y: 0}
   currentPiece: {fileID: 0}
   grid: {fileID: 0}
-  colorFeedBackTime: 0.2
+  colorFeedBackTime: 0.3

@@ -76,7 +76,6 @@ public class Piece : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHan
         if (!backFromSwipe)
             CurrentCell.PieceFinishSwipeAnimation();
     }
-
     #region Interface Implementations
 
     public void OnBeginDrag(PointerEventData eventData){}
