@@ -57,12 +57,12 @@ public class Cell : MonoBehaviour,  IPointerClickHandler, IPointerUpHandler, IPo
             Debug.LogError("Failed in receive Piece");
     }
 
-
     public void ChangeColorFeedBack(Color c)
     {
         imageComponent.color = c;
         StartCoroutine(ChangeColorToOriginal());
     }
+
     public void InitMatch()
     {
         if (UpCell)

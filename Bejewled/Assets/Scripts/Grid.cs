@@ -71,13 +71,25 @@ public class Grid : MonoBehaviour
             }
         }
     }
-    public void FillGrid()
+    public void FillGrid(List<Cell> matchedCellsToInit = null)
     {
-        foreach (Cell c in CellinGrid)
-        {
-            if (c.CurrentPiece == null)
+        if(matchedCellsToInit ==null)
+            foreach (Cell c in CellinGrid)
             {
-                c.InitMatch();
+                if (c.CurrentPiece == null)
+                {
+                    c.InitMatch();
+                }
+            }
+
+        else//will get only the mathced cells and will not need to search for the entire grid
+        {
+            foreach (Cell c in matchedCellsToInit)
+            {
+                if (c.CurrentPiece == null)
+                {
+                    c.InitMatch();
+                }
             }
         }
 
