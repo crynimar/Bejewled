@@ -18,7 +18,20 @@ public class GameManager : MonoBehaviour
     [SerializeField] private bool stillLookingForMatch = false;
 
     public bool CanPlay{ get => canPlay; set => canPlay = value; }
-    public bool StillLookingForMatch { get => stillLookingForMatch; set => stillLookingForMatch = value; }
+    public bool StillLookingForMatch 
+    {
+        get => stillLookingForMatch;
+
+        set
+        {
+            stillLookingForMatch = value;
+
+            if (stillLookingForMatch)
+                CanPlay = false;
+            else
+                CheckIfCanPlay();
+        }
+    }
 
     public int PiecesAnimating 
     {
@@ -28,11 +41,10 @@ public class GameManager : MonoBehaviour
         {
             piecesAnimating = value;
 
-            if (piecesAnimating == 0 && !StillLookingForMatch)
-                CanPlay = true;
+            if(piecesAnimating > 0)
+                CanPlay = false;
             else
-                CanPlay = false;        
-         
+                CheckIfCanPlay();
         }
     }
 
@@ -114,5 +126,12 @@ public class GameManager : MonoBehaviour
                 dragged.CanSwipePieces(currentMouseOverCell);
             }
         }
+    }
+
+    private void CheckIfCanPlay()
+    {
+        Debug.Log("piecesAnimating: " + piecesAnimating + " StillLookingForMatch: " + StillLookingForMatch);
+        if (piecesAnimating == 0 && !StillLookingForMatch)
+            CanPlay = true;
     }
 }

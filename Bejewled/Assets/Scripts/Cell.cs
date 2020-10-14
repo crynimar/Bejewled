@@ -5,6 +5,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Events;
 using UnityEngine.EventSystems;
+using System.Runtime.CompilerServices;
 
 public class Cell : MonoBehaviour,  IPointerClickHandler, IPointerUpHandler, IPointerExitHandler, IPointerEnterHandler
 {
@@ -173,7 +174,7 @@ public class Cell : MonoBehaviour,  IPointerClickHandler, IPointerUpHandler, IPo
     #region Check Combinations
     public List<Cell> CheckCombinations()
     {
-        List<Cell> MatchedList = new List<Cell>();        
+        List<Cell> MatchedList = new List<Cell>();
 
         #region Check Left and Right
         bool LeftIsMatch = CheckLeftCombination();
@@ -245,7 +246,7 @@ public class Cell : MonoBehaviour,  IPointerClickHandler, IPointerUpHandler, IPo
 
 
         return MatchedList;
-      
+
     }
 
     public bool CheckLeftCombination()
