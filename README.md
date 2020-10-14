@@ -5,6 +5,7 @@ This project is created by Dalmar Durães Assunção as a Unity test for Gazeus
 ### How do I get set up? ###
 
 Clone repository and use Unity 2019.4.10f1
+On Unity, open the Scene named "Main" under Assets/Scenes
 
 ### Who do I talk to? ###
 
