@@ -98,7 +98,7 @@ public class GameManager : MonoBehaviour
             c.CurrentPiece = null;
         }
 
-        GridPanel.FillGrid(matchedCells);
+        GridPanel.FillGrid();
     }        
 
     public void HandleMouseOverCell(Cell c)
