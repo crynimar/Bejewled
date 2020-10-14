@@ -8,14 +8,13 @@ public class GameManager : MonoBehaviour
     public static GameManager Instance;   
 
     [SerializeField] private Grid GridPanel;
-
-    [SerializeField] private Cell lastCellClicked;
     [SerializeField] private float pieceAnimationDethTime;
-    [SerializeField] private bool canPlay;
-    [SerializeField] private Cell currentMouseOverCell;
-
-    [SerializeField] private int piecesAnimating = 0;
-    [SerializeField] private bool stillLookingForMatch = false;
+    
+    private Cell currentMouseOverCell;
+    private Cell lastCellClicked;
+    private bool canPlay;
+    private int piecesAnimating = 0;
+    private bool stillLookingForMatch = false;
 
     public bool CanPlay{ get => canPlay; set => canPlay = value; }
     public bool StillLookingForMatch 
@@ -46,9 +45,7 @@ public class GameManager : MonoBehaviour
             else
                 CheckIfCanPlay();
         }
-    }
-
-   
+    }   
 
     void Awake()
     {

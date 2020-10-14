@@ -108,6 +108,7 @@ public class Cell : MonoBehaviour,  IPointerClickHandler, IPointerUpHandler, IPo
         else if(cellToChange == UpCell) SwipePieces(UpCell);
         else if(cellToChange == DownCell) SwipePieces(DownCell);        
     }
+
     private void SwipePieces(Cell c, bool backFromSwipe = false) // Action will tell if need to return animation
     {
         lastSwipedCell = c;

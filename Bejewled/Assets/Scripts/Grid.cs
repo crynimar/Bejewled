@@ -82,7 +82,7 @@ public class Grid : MonoBehaviour
                 }
             }
 
-        else//will get only the mathced cells and will not need to search for the entire grid
+        else //will get only the mathced cells and will not need to search for the entire grid
         {
             foreach (Cell c in matchedCellsToInit)
             {

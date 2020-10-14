@@ -29,7 +29,6 @@ public class Piece : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHan
     public Cell CurrentCell { get => currentCell; set => currentCell = value; }
     public RectTransform RectTransform { get => rectTransform; set => rectTransform = value; }
 
-
     public void RandomizePiece()
     {
         int rand = UnityEngine.Random.Range(0, possibleSprites.Length);
